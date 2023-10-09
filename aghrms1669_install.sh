@@ -102,7 +102,7 @@ sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
 # Install Aghrms
 #--------------------------------------------------
 echo -e "\n==== Installing Aghrms Server ===="
-sudo git clone --depth 1 --branch $OE_VERSION https://github.com/ShaheenHossain/odoo_ent16_060623 $OE_HOME_EXT/
+sudo git clone --depth 1 --branch $OE_VERSION https://github.com/ShaheenHossain/odoo_16ent_060323 $OE_HOME_EXT/
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Aghrms Enterprise install!

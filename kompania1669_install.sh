@@ -1,4 +1,4 @@
-OE_USER="aghrms1669"
+OE_USER="kompania1669"
 OE_HOME="/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 INSTALL_WKHTMLTOPDF="True"
@@ -53,7 +53,7 @@ else
 fi
 
 
-echo -e "\n---- Creating the Aghrms PostgreSQL User  ----"
+echo -e "\n---- Creating the kompania PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 
 #--------------------------------------------------
@@ -89,8 +89,8 @@ else
   echo "Wkhtmltopdf isn't installed due to the choice of the user!"
 fi
 
-echo -e "\n---- Create Aghrms system user ----"
-sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'AGHRMS1669' --group $OE_USER
+echo -e "\n---- Create kompania system user ----"
+sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'KOMPANIA1669' --group $OE_USER
 #The user should also be added to the sudo'ers group.
 sudo adduser $OE_USER sudo
 
@@ -99,13 +99,13 @@ sudo mkdir /var/log/$OE_USER
 sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
 
 #--------------------------------------------------
-# Install Aghrms
+# Install kompania
 #--------------------------------------------------
-echo -e "\n==== Installing Aghrms Server ===="
-sudo git clone --depth 1 --branch $OE_VERSION https://github.com/ShaheenHossain/odoo_16ent_060623 $OE_HOME_EXT/
+echo -e "\n==== Installing kompania Server ===="
+sudo git clone --depth 1 --branch $OE_VERSION https://github.com/ShaheenHossain/princeforchu_ent16 $OE_HOME_EXT/
 
 if [ $IS_ENTERPRISE = "True" ]; then
-    # Aghrms Enterprise install!
+    # kompania Enterprise install!
     sudo pip3 install psycopg2-binary pdfminer.six
     echo -e "\n--- Create symlink for node"
     sudo ln -s /usr/bin/nodejs /usr/bin/node
@@ -116,7 +116,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
     while [[ $GITHUB_RESPONSE == *"Authentication"* ]]; do
         echo "------------------------WARNING------------------------------"
         echo "Your authentication with Github has failed! Please try again."
-        printf "In order to clone and install the Aghrms enterprise version you \nneed to be an offical Aghrms partner and you need access to\nhttp://github.com/odoo/enterprise.\n"
+        printf "In order to clone and install the kompania enterprise version you \nneed to be an offical Aghrms partner and you need access to\nhttp://github.com/odoo/enterprise.\n"
         echo "TIP: Press ctrl+c to stop this script."
         echo "-------------------------------------------------------------"
         echo " "
@@ -158,18 +158,18 @@ sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /e
 if [ $IS_ENTERPRISE = "True" ]; then
     sudo su root -c "printf 'addons_path=${OE_HOME}/enterprise/addons,${OE_HOME_EXT}/addons\n' >> /etc/${OE_CONFIG}.conf"
 else
-    sudo su root -c "printf 'addons_path=${OE_HOME_EXT}/odoo/addons,${OE_HOME}/custom/addons\n' >> /etc/${OE_CONFIG}.conf"
+    sudo su root -c "printf 'addons_path=${OE_HOME_EXT}/kompania/addons,${OE_HOME}/custom/addons\n' >> /etc/${OE_CONFIG}.conf"
 fi
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
 
 echo -e "* Create startup file"
 sudo su root -c "echo '#!/bin/sh' >> $OE_HOME_EXT/start.sh"
-sudo su root -c "echo 'sudo -u $OE_USER $OE_HOME_EXT/odoo-bin --config=/etc/${OE_CONFIG}.conf' >> $OE_HOME_EXT/start.sh"
+sudo su root -c "echo 'sudo -u $OE_USER $OE_HOME_EXT/kompania-bin --config=/etc/${OE_CONFIG}.conf' >> $OE_HOME_EXT/start.sh"
 sudo chmod 755 $OE_HOME_EXT/start.sh
 
 #--------------------------------------------------
-# Adding Aghrms as a deamon (initscript)
+# Adding kompania as a deamon (initscript)
 #--------------------------------------------------
 
 echo -e "* Create init file"
@@ -184,13 +184,13 @@ cat <<EOF > ~/$OE_CONFIG
 # Default-Start: 2 3 4 5
 # Default-Stop: 0 1 6
 # Short-Description: Enterprise Business Applications
-# Description: Aghrms Business Applications
+# Description: kompania Business Applications
 ### END INIT INFO
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
-DAEMON=$OE_HOME_EXT/odoo-bin
+DAEMON=$OE_HOME_EXT/kompania-bin
 NAME=$OE_CONFIG
 DESC=$OE_CONFIG
-# Specify the user name (Default: Aghrms).
+# Specify the user name (Default: kompania).
 USER=$OE_USER
 # Specify an alternate config file (Default: /etc/openerp-server.conf).
 CONFIGFILE="/etc/${OE_CONFIG}.conf"
@@ -244,7 +244,7 @@ sudo mv ~/$OE_CONFIG /etc/init.d/$OE_CONFIG
 sudo chmod 755 /etc/init.d/$OE_CONFIG
 sudo chown root: /etc/init.d/$OE_CONFIG
 
-echo -e "* Start Aghrms on Startup"
+echo -e "* Start kompania on Startup"
 sudo update-rc.d $OE_CONFIG defaults
 
 #--------------------------------------------------
@@ -253,14 +253,14 @@ sudo update-rc.d $OE_CONFIG defaults
 if [ $INSTALL_NGINX = "True" ]; then
   echo -e "\n---- Installing and setting up Nginx ----"
   sudo apt install nginx -y
-  cat <<EOF > ~/odoo
+  cat <<EOF > ~/kompania
 server {
   listen 80;
 
   # set proper server name after domain set
   server_name $WEBSITE_NAME;
 
-  # Add Headers for odoo proxy mode
+  # Add Headers for kompania proxy mode
   proxy_set_header X-Forwarded-Host \$host;
   proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
   proxy_set_header X-Forwarded-Proto \$scheme;
@@ -270,7 +270,7 @@ server {
   proxy_set_header X-Client-IP \$remote_addr;
   proxy_set_header HTTP_X_FORWARDED_HOST \$remote_addr;
 
-  #   odoo    log files
+  #   kompania    log files
   access_log  /var/log/nginx/$OE_USER-access.log;
   error_log       /var/log/nginx/$OE_USER-error.log;
 
@@ -328,7 +328,7 @@ server {
 }
 EOF
 
-  sudo mv ~/odoo /etc/nginx/sites-available/$WEBSITE_NAME
+  sudo mv ~/kompania /etc/nginx/sites-available/$WEBSITE_NAME
   sudo ln -s /etc/nginx/sites-available/$WEBSITE_NAME /etc/nginx/sites-enabled/$WEBSITE_NAME
   sudo rm /etc/nginx/sites-enabled/default
   sudo service nginx reload
@@ -352,10 +352,10 @@ else
   echo "SSL/HTTPS isn't enabled due to choice of the user or because of a misconfiguration!"
 fi
 
-echo -e "* Starting Aghrms Service"
+echo -e "* Starting kompania Service"
 sudo su root -c "/etc/init.d/$OE_CONFIG start"
 echo "-----------------------------------------------------------"
-echo "Done! The Aghrms server is up and running. Specifications:"
+echo "Done! The kompania server is up and running. Specifications:"
 echo "Port: $OE_PORT"
 echo "User service: $OE_USER"
 echo "Configuraton file location: /etc/${OE_CONFIG}.conf"
@@ -364,9 +364,9 @@ echo "User PostgreSQL: $OE_USER"
 echo "Code location: $OE_USER"
 echo "Addons folder: $OE_USER/$OE_CONFIG/addons/"
 echo "Password superadmin (database): $OE_SUPERADMIN"
-echo "Start Aghrms service: sudo service $OE_CONFIG start"
-echo "Stop Aghrms service: sudo service $OE_CONFIG stop"
-echo "Restart Aghrms service: sudo service $OE_CONFIG restart"
+echo "Start kompania service: sudo service $OE_CONFIG start"
+echo "Stop kompania service: sudo service $OE_CONFIG stop"
+echo "Restart kompania service: sudo service $OE_CONFIG restart"
 if [ $INSTALL_NGINX = "True" ]; then
   echo "Nginx configuration file: /etc/nginx/sites-available/$WEBSITE_NAME"
 fi

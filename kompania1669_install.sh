@@ -102,7 +102,7 @@ sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
 # Install kompania
 #--------------------------------------------------
 echo -e "\n==== Installing kompania Server ===="
-sudo git clone --depth 1 --branch $OE_VERSION https://github.com/ShaheenHossain/princeforchu_ent16 $OE_HOME_EXT/
+sudo git clone --depth 1 --branch $OE_VERSION https://github.com/ShaheenHossain/princeforchu_entm16 $OE_HOME_EXT/
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # kompania Enterprise install!

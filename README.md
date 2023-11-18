@@ -1,8 +1,8 @@
 
-sudo wget https://raw.githubusercontent.com/ShaheenHossain/ag-hrmsinstallScript/aghrms1669/aghrms1669_install.sh
+sudo wget https://raw.githubusercontent.com/ShaheenHossain/install-komapnia-script/kompania1669/kompania1669_install.sh
 
-sudo chmod +x aghrms1669_install.sh
+sudo chmod +x kompania1669_install.sh
 
-sudo ./aghrms1669_install.sh
+sudo ./kompania1669_install.sh
 
 

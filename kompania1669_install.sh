@@ -15,7 +15,7 @@ OE_CONFIG="${OE_USER}-server"
 WEBSITE_NAME="_"
 LONGPOLLING_PORT="8072"
 ENABLE_SSL="False"
-ADMIN_EMAIL="rapidgrps@gmail.com"
+ADMIN_EMAIL="info@kompaniaonline.com"
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
